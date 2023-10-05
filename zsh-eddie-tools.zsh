@@ -1,3 +1,7 @@
+# Envs
+
+KUBE_EDITOR="code --wait"; export KUBE_EDITOR
+
 # Aliases
 
 alias ls="lsd"
