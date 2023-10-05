@@ -41,7 +41,19 @@ kube_exec() {
 update_k9s() {
   local TARFILE=$(mktemp)
   local INSTALL_DIR=$(mktemp -d)
-  curl -L https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_amd64.tar.gz -o "$TARFILE"
+  case $(uname -m) in
+    x86_64)
+      local k9s_arch="amd64"
+      ;;
+    aarch64)
+      local k9s_arch="arm64"
+      ;;
+    *) # Default case to handle other architectures or error
+      echo "This script only supports x86_64 and aarch64 archs, not $(uname -m)"
+      exit 1
+      ;;
+  esac
+  curl -L https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_"$k9s_arch".tar.gz -o "$TARFILE"
   tar xvf "$TARFILE" -C "$INSTALL_DIR"
   sudo mv "$INSTALL_DIR"/k9s /usr/local/bin
   sudo chmod +x /usr/local/bin/k9s
@@ -51,7 +63,7 @@ update_k9s() {
 update_awscli() {
   local ZIPFILE=$(mktemp)
   local INSTALL_DIR=$(mktemp -d)
-  curl -L https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o "$ZIPFILE"
+  curl -L https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip -o "$ZIPFILE"
   unzip -q "$ZIPFILE" -d "$INSTALL_DIR"
   sudo "$INSTALL_DIR"/aws/install --update
   aws --version
