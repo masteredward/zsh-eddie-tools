@@ -49,7 +49,7 @@ update_k9s() {
       local k9s_arch="arm64"
       ;;
     *) # Default case to handle other architectures or error
-      echo "This script only supports x86_64 and aarch64 archs, not $(uname -m)"
+      echo "This function only supports x86_64 and aarch64 archs, not $(uname -m)"
       exit 1
       ;;
   esac
@@ -67,4 +67,11 @@ update_awscli() {
   unzip -q "$ZIPFILE" -d "$INSTALL_DIR"
   sudo "$INSTALL_DIR"/aws/install --update
   aws --version
+}
+
+update_ubuntu() {
+  sudo apt update
+  sudo apt full-upgrade -y
+  sudo apt autoremove -y
+  sudo snap refresh
 }
